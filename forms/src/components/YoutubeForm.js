@@ -1,30 +1,28 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 const YoutubeForm = () => {
+
+  const initialValues = {
+    name: '',
+    email: '',
+    channel: ''
+  }
+  const onSubmit = values => {
+    // console.log("Form data", values)
+  }
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("name is required"),
+    email: Yup.string().email("Invalid email format").required("email is required"),
+    channel: Yup.string().required('Channel is required')
+  })
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      channel: ''
-    }, 
-    onSubmit: values => {
-      // console.log("Form data", values)
-    },
-    validate: values => {
-      let errors = {}
-      if(!values.name){
-        errors.name = "Required"
-      }
-      if(!values.email){
-        errors.email = "Required"
-      }
-      if(!values.channel){
-        errors.channel = "Required"
-      }
-      return errors
-    }
+    initialValues, 
+    onSubmit,
+    validationSchema,
   });
-  const { handleChange, values, handleSubmit, errors, handleBlur, touched } = formik
+  const {  handleSubmit, errors, touched } = formik
   console.log("Visited Fields", touched)
   return (
 
@@ -36,9 +34,7 @@ const YoutubeForm = () => {
             type="text"
             id="name"
             name="name"
-            onChange={handleChange}
-            onBlur ={handleBlur}
-            value={values.name}
+            {...formik.getFieldProps('name')}
           />
          { touched.name && errors.name?  <span className="error"> {errors.name} </span>: null}
         </div>
@@ -48,9 +44,7 @@ const YoutubeForm = () => {
             type="email"
             id="email"
             name="email"
-            onChange={handleChange}
-            onBlur ={handleBlur}
-            value={values.email}
+            {...formik.getFieldProps('email')}
           />
           {touched.email && errors.email?<span className="error"> {errors.email}</span> : null}
         </div>
@@ -60,9 +54,7 @@ const YoutubeForm = () => {
             type="text"
             id="channel"
             name="channel"
-            onChange={handleChange}
-            onBlur ={handleBlur}
-            value={values.channel}
+            {...formik.getFieldProps('channel')}
           />
           {touched.channel && errors.channel?<span className="error"> {errors.channel} </span> : null}
         </div>
