@@ -10,7 +10,11 @@ const YoutubeForm = () => {
     email: '',
     channel: '', 
     comment: '',
-    address: ''
+    address: '',
+    socials: {
+      facebook: '',
+      twitter:'',
+    }
   }
   const onSubmit = values => {
     // console.log("Form data", values)
@@ -46,7 +50,13 @@ const YoutubeForm = () => {
             id="email"
             name="email"
           />
-          <ErrorMessage name="email" component= {TextError}/>
+          <ErrorMessage name="email">
+            {
+              (errorMsg)=>{
+                return <div className="error">{errorMsg}</div>
+              }
+            }
+          </ErrorMessage>
         </div>
         <div className="form-control">
           <label htmlFor="channel">Channel</label>
@@ -76,6 +86,14 @@ const YoutubeForm = () => {
               }
             } 
           </Field>
+        </div>
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook</label>
+          <Field type="text" id="facebook" name="socials.facebook" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter</label>
+          <Field type="text" id="twitter" name="socials.twitter" />
         </div>
         <button>Submit</button>
       </Form>
