@@ -14,10 +14,11 @@ const YoutubeForm = () => {
     socials: {
       facebook: '',
       twitter:'',
-    }
+    },
+    phoneNumbers: ['','']
   }
   const onSubmit = values => {
-    // console.log("Form data", values)
+    console.log("Form data", values)
   }
 
   const validationSchema = Yup.object({
@@ -86,6 +87,7 @@ const YoutubeForm = () => {
               }
             } 
           </Field>
+          <ErrorMessage name="address" component= {TextError}/>
         </div>
         <div className="form-control">
           <label htmlFor="facebook">Facebook</label>
@@ -94,6 +96,14 @@ const YoutubeForm = () => {
         <div className="form-control">
           <label htmlFor="twitter">Twitter</label>
           <Field type="text" id="twitter" name="socials.twitter" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="first-num">First Number</label>
+          <Field type="text" id="first-num" name="phoneNumbers[0]" />
+        </div>
+        <div className="form-control">
+          <label htmlFor="second-num">Second Number</label>
+          <Field type="text" id="second-num" name="phoneNumbers[1]" />
         </div>
         <button>Submit</button>
       </Form>
