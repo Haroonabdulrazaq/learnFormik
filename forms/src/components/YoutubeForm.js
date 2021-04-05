@@ -1,5 +1,5 @@
 import React from 'react';
-import {  Formik, Form, Field, ErrorMessage } from 'formik';
+import {  Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import TextError  from './TextError';
 
@@ -15,7 +15,8 @@ const YoutubeForm = () => {
       facebook: '',
       twitter:'',
     },
-    phoneNumbers: ['','']
+    phoneNumbers: ['',''],
+    phNumbers: ['']
   }
   const onSubmit = values => {
     console.log("Form data", values)
@@ -26,14 +27,22 @@ const YoutubeForm = () => {
     email: Yup.string().email("Invalid email format").required("email is required"),
     channel: Yup.string().required('Channel is required'),
     comment: Yup.string().required('Comment is required'),
+    address: Yup.string().required('Address is required'),
   })
+  const validateComments = value => {
+    let error
+    if(!value) {
+      error = "Comment is required"
+    }
+    return error;
+  }
 
   return (
-
     <Formik 
       initialValues={initialValues}
       onSubmit={onSubmit}
-      validationSchema={validationSchema}>
+      validationSchema={validationSchema}
+      validateOnChange={false}>
       <Form>
         <div className="form-control">
           <label htmlFor="name">Name</label>
@@ -70,7 +79,7 @@ const YoutubeForm = () => {
         </div>
         <div className="form-control">
           <label htmlFor="comment">Comment</label>
-          <Field id="comment" name="comment" as="textarea" />
+          <Field id="comment" name="comment" as="textarea" validate={validateComments} />
           <ErrorMessage name="comment" component= {TextError}/>
         </div>
         <div className="form-control">
@@ -79,7 +88,6 @@ const YoutubeForm = () => {
             { 
               (props) => {
                const {field, meta} = props
-                console.log(props)
                 return <div>
                   <input type="text" id="address" {...field} />
                   {meta.touched && meta.error? <div>{meta.error}</div>: null}
@@ -104,6 +112,28 @@ const YoutubeForm = () => {
         <div className="form-control">
           <label htmlFor="second-num">Second Number</label>
           <Field type="text" id="second-num" name="phoneNumbers[1]" />
+        </div>
+        {/* Dynamic FieldArray */}
+        <div className="form-control">
+        <label htmlFor="phNumbers">List of Phone Numbers</label>
+          <FieldArray type="text" id="phNumbers" name="phNumbers">
+            {
+              (fieldArrayProps)=>{
+                const {push, remove, form} = fieldArrayProps;
+                console.log("Form Error", form.errors);
+                const {phNumbers} = form.values
+                return <div>
+                  {phNumbers.map((phNumber, index) => (
+                    <div key={index}>
+                      <Field name={`phNumbers[${index}]`} />
+                     {index > 0 && <button type="button" onClick={()=> remove(index)}>{' '} - {' '}</button>}
+                      <button type="button"  onClick={()=> push('')}>+</button>
+                    </div>
+                  ))}
+                </div>
+              }
+            }
+          </FieldArray>
         </div>
         <button>Submit</button>
       </Form>
